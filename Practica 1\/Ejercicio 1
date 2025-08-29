@@ -10,6 +10,7 @@ int main(void)
         int max=0;
         int min=0;
         int pos=0;
+        int temp;
         float prom=0;
         do
         {

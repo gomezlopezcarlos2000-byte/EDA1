@@ -4,6 +4,7 @@
         printf("3-Promediar\n");
         printf("4-Mostrar minimo y su posicion\n");
         printf("5-Mostrar maximo y su posicion\n");
+        printf("6-Invertit el arreglo \n");
         scanf("%d", &opcion);
         
         switch(opcion){

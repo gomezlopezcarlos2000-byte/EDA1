@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int main(void) {
+
+int a[5] = {2, 4, 6, 8, 10};
+
+int *p = a; // p apunta a a[0]
+
+printf("1) a[1] = %d\n", a[1]); //imprime el dato numero 1 del areglo que es 4
+
+printf("2) *(a+3) = %d\n", *(a+3)); //imprime el dato al que apunta a moviendose 3 espacios el cual es 8
+
+printf("3) *p++ = %d\n", *p++); //imprime el dato al que apunta p y despues lo incrementa el dato que imprime es 2
+
+printf("4) *++p = %d\n", *++p); //imcrementa el dato al que apunta p y despues lo imprime imprimiendo 6
+
+printf("5) p[1] = %d\n", p[1]); //incrementa el dato a 1 mas y como es a+2 desde el punto anterior se vuelve a+3 dando el valor 8
+
+printf("6) *(p+=2) = %d\n", *(p+=2)); //incrementa a+2 y se convierte en a+4 dando el dato 10
+
+printf("7) p - a = %ld\n", p - a); //es una resta de punteros es como tener a+4 - a que nos da el dato 4 
+
+return 0;
+
+}

@@ -36,6 +36,21 @@ void mostrarPeliculas(struct Pelicula peliculas[], int n) { //funcion mostrar to
     }
 }
 
+void mostrarPeliculasInverso(struct Pelicula peliculas[], int n) {
+    printf("\n--- Lista de películas (orden inverso) ---\n");
+    for (int i = n - 1; i >= 0; i--) {
+        printf("%d. %s (%d) - Género: %s\n", i + 1,
+               peliculas[i].titulo, peliculas[i].anio, peliculas[i].genero);
+        printf("   Directores: ");
+        for (int j = 0; j < peliculas[i].numDirectores; j++) {
+            printf("%s", peliculas[i].directores[j]);
+            if (j < peliculas[i].numDirectores - 1) printf(", ");
+        }
+        printf("\n");
+    }
+}
+
+
 void buscarPorTitulo(struct Pelicula peliculas[], int n, char titulo[]) { // funcion buscar por el titulo 
     char tituloLower[MAX_LEN];
     strcpy(tituloLower, titulo);
@@ -111,6 +126,45 @@ void buscarPorDirector(struct Pelicula peliculas[], int n, char director[]) { //
     if (!encontrado) printf("No se encontraron películas con ese director.\n");
 }
 
+void contarPorGenero(struct Pelicula peliculas[], int n) {
+    printf("\n--- Conteo de películas por género ---\n");
+    for (int i = 0; i < n; i++) {
+        int contador = 1;
+        int yaContado = 0;
+
+        char generoActual[MAX_LEN];
+        strcpy(generoActual, peliculas[i].genero);
+        toLowerCase(generoActual);
+
+        // Revisar si ya contamos este género antes
+        for (int k = 0; k < i; k++) {
+            char generoPrevio[MAX_LEN];
+            strcpy(generoPrevio, peliculas[k].genero);
+            toLowerCase(generoPrevio);
+
+            if (strcmp(generoActual, generoPrevio) == 0) {
+                yaContado = 1;
+                break;
+            }
+        }
+        if (yaContado) continue;
+
+        // Contar cuántas veces aparece este género
+        for (int j = i + 1; j < n; j++) {
+            char generoComparar[MAX_LEN];
+            strcpy(generoComparar, peliculas[j].genero);
+            toLowerCase(generoComparar);
+
+            if (strcmp(generoActual, generoComparar) == 0) {
+                contador++;
+            }
+        }
+
+        printf("Género %s: %d película(s)\n", peliculas[i].genero, contador);
+    }
+}
+
+
 int main() {
     struct Pelicula peliculas[MAX_PELICULAS];
     int n, opcion;
@@ -119,7 +173,7 @@ int main() {
         printf("¿Cuántas películas deseas ingresar? (mínimo %d, máximo %d): ",
                MIN_PELICULAS, MAX_PELICULAS);
         scanf("%d", &n);
-    } while (n < MIN_PELICULAS || n > MAX_PELICULAS);
+    } while (n < MIN_PELICULAS || n > MAX_PELICULAS );
 
     getchar(); 
 
@@ -160,6 +214,8 @@ int main() {
         printf("3. Buscar por género\n");
         printf("4. Buscar por año\n");
         printf("5. Buscar por director\n");
+        printf("6. Mostrar todas las peliculas de forma inversa");
+        printf("7. Contar peliculas por genero");
         printf("0. Salir\n");
         printf("Opción: ");
         scanf("%d", &opcion);
@@ -190,10 +246,15 @@ int main() {
             fgets(director, sizeof(director), stdin);
             director[strcspn(director, "\n")] = 0;
             buscarPorDirector(peliculas, n, director);//llamamos a la funcion buscar por director
+        } else if (opcion == 6){
+            mostrarPeliculasInverso(peliculas, n);
+        } else if(opcion ==7){
+            contarPorGenero(peliculas, n);
         }
+        
     } while (opcion != 0);
 
     return 0;       //apiadese de mi me llevo horas y errores hacer esto :c  y por ahi me salto un error de bucle
                     //cuando en lugar de poner un entero en cuantos directores son poner un caracter se hace
-                    //un bucle preguntado cuantos directores son pero solo salta de vez en cuando 
+                    //un bucle preguntado cuantos directores son pero solo salta de vez en cuando
 }

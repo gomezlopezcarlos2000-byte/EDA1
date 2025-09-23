@@ -1,0 +1,65 @@
+        printf("Que desea hacer con estos datos\n");
+        printf("1-Sumar\n");
+        printf("2-Restar\n");
+        printf("3-Promediar\n");
+        printf("4-Mostrar minimo y su posicion\n");
+        printf("5-Mostrar maximo y su posicion\n");
+        printf("6-Invertit el arreglo \n");
+        scanf("%d", &opcion);
+        
+        switch(opcion){
+            case 1:
+            {
+                printf("Elegiste sumar\n");
+                for(int i=0; i<n; i++){
+                    suma += a[i];
+                    
+                    
+                }
+                printf("El resultado es %d", suma);
+                break;
+            }
+            case 2:
+            {
+                printf("Elegiste restar\n");
+                for(int i=0; i<n; i++){
+                    resta -= a[i];
+                    
+                }
+                printf("El resultado es %d", resta);
+                break;
+            }
+            case 3:
+            {
+                printf("Elegiste promediar\n");
+                    for(int i=0; i<n; i++){
+                    prom += a[i];
+                    
+                    }
+                prom/=n;
+                printf("El promedio es %.2f \n", prom);
+                break;
+            }
+            case 4:
+                 printf("Elegiste mostrar minimo y su posicion\n");
+                 min = a[0];
+                 pos = 0;
+                 for (int i = 1; i < n; i++) {
+                    if (a[i] < min) {
+                    min = a[i];
+                    pos = i;
+                    }
+                }
+                printf("El minimo es %d y la posicion es %d\n", min, pos);
+                break;
+            case 5:
+            {
+                printf("Elegiste mostrar maximo y su posicion\n");
+                for(int i=1; i<n; i++)
+                    if(a[i]>max){
+                        max= a[i]; 
+                        pos=i;
+                    }
+                printf("El maximo es %d y la posicion es %d\n", max, pos);
+                break;
+            } 

@@ -3,7 +3,7 @@
 
 
 int*ReservarMemoria(int *n){
-    printf("Cuantos elementos enteros quieres alamcenar?\n");
+    printf("Cuantos elementos enteros quieres almacenar?\n");
     scanf("%d", n);
     
     int *ptr = (int*) calloc (*n, sizeof(int)); //reservamos memoria con calloc

@@ -1,0 +1,136 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int* ReservarMalloc(int *n_malloc){
+    printf("¿Cuántos elementos enteros quieres almacenar con malloc?\n");
+    scanf("%d", n_malloc);
+
+    int *ptr = (int*) malloc((*n_malloc) * sizeof(int));
+    if (ptr == NULL){
+        printf("NO SE PUDO RESERVAR LA MEMORIA (malloc).\n");
+        exit(1);
+    }
+
+    printf("\nValores iniciales con malloc (basura):\n");
+    for (int i = 0; i < *n_malloc; i++){
+        printf("%d ", ptr[i]);
+    }
+    printf("\n");
+
+    for(int i = 0; i < *n_malloc; i++){
+        printf("Elemento %d: ", i + 1);
+        scanf("%d", &ptr[i]);
+    }
+
+    return ptr;
+}
+
+int* ReservarCalloc(int *n_calloc){
+    printf("¿Cuántos elementos enteros quieres almacenar con calloc?\n");
+    scanf("%d", n_calloc);
+
+    int *ptr = (int*) calloc(*n_calloc, sizeof(int));
+    if (ptr == NULL){
+        printf("NO SE PUDO RESERVAR LA MEMORIA (calloc).\n");
+        exit(1);
+    }
+
+    printf("\nValores iniciales con calloc (ceros):\n");
+    for (int i = 0; i < *n_calloc; i++){
+        printf("%d ", ptr[i]);
+    }
+    printf("\n");
+
+    for(int i = 0; i < *n_calloc; i++){
+        printf("Elemento %d: ", i + 1);
+        scanf("%d", &ptr[i]);
+    }
+
+    return ptr;
+}
+
+int main(){
+    int n_malloc = 0; 
+    int n_calloc = 0; 
+    int opcion, m;
+    int *arr = NULL;   // arreglo con malloc
+    int *arr2 = NULL;  // arreglo con calloc
+
+    do {
+        printf("\n¿Qué deseas hacer?\n");
+        printf("1) Reservar memoria con malloc\n");
+        printf("2) Reservar memoria con calloc\n");
+        printf("3) Redimensionar arreglo con realloc (calloc)\n");
+        printf("4) Mostrar los arreglos\n");
+        printf("5) Salir y liberar memoria\n");
+        scanf("%d", &opcion);
+
+        switch(opcion){
+            case 1:
+                arr = ReservarMalloc(&n_malloc);
+                break;
+
+            case 2:
+                arr2 = ReservarCalloc(&n_calloc);
+                break;
+
+            case 3:
+                if(arr2 == NULL){
+                    printf("Primero debes reservar memoria con calloc.\n");
+                } else {
+                    printf("Nuevo tamaño para el arreglo 2 (calloc): ");
+                    scanf("%d", &m);
+
+                    int *temp = (int*) realloc(arr2, m * sizeof(int));
+                    if (temp == NULL){
+                        printf("Error al redimensionar memoria.\n");
+                    } else {
+                        arr2 = temp;
+                        if (m > n_calloc){
+                            for(int i = n_calloc; i < m; i++){
+                                printf("Elemento %d (nuevo): ", i + 1);
+                                scanf("%d", &arr2[i]);
+                            }
+                        }
+                        n_calloc = m;
+                        printf("Memoria redimensionada a %d enteros.\n", n_calloc);
+                    }
+                }
+                break;
+
+            case 4:
+                printf("Datos en el arreglo 1 (malloc):\n");
+                if(arr != NULL){
+                    for(int i = 0; i < n_malloc; i++){
+                        printf("%d ", arr[i]);
+                    }
+                    printf("\n");
+                } else {
+                    printf("No se ha reservado memoria con malloc.\n");
+                }
+
+                printf("Datos en el arreglo 2 (calloc):\n");
+                if(arr2 != NULL){
+                    for(int i = 0; i < n_calloc; i++){
+                        printf("%d ", arr2[i]);
+                    }
+                    printf("\n");
+                } else {
+                    printf("No se ha reservado memoria con calloc.\n");
+                }
+                break;
+
+            case 5:
+                free(arr);
+                free(arr2);
+                printf("Memoria liberada correctamente.\n");
+                break;
+
+            default:
+                printf("Opción inválida.\n");
+        }
+
+    } while(opcion != 5);
+
+    return 0;
+}

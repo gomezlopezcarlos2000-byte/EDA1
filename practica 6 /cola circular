@@ -93,3 +93,10 @@
     return 0;
     
  }
+
+//1. ¿Por qué en la cola circular no se desperdician posiciones como en la cola lineal?
+// porque al apuntar el ultimo al primer nodo este se puede volver a utilizar a diferencia de la lineal que no se puede volver a utilizar
+//2. ¿Qué pasa cuando el índice final llega al final del arreglo?
+// apunta al inicio del arreglo para meter mas datos o indicar que la cola esta llena
+//3. ¿Qué sucede si intentas encolar cuando la cola está llena?
+// si no tuviera condicional se sobrescribirian los datos que ya se escribieron antes

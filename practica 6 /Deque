@@ -1,0 +1,99 @@
+#include <stdio.h>
+#define MAX 5
+
+typedef struct {
+    int datos[MAX];
+    int front;
+    int size;
+} Deque;
+
+void initDeque(Deque *d) {
+    d->front = 0;
+    d->size = 0;
+    printf("Deque inicializado.\n");
+}
+
+void insert_front(Deque *d, int valor) {
+    if (d->size == MAX) {
+        printf("Deque lleno.\n");
+        return;
+    }
+    d->front = (d->front - 1 + MAX) % MAX;
+    d->datos[d->front] = valor;
+    d->size++;
+}
+
+void insert_rear(Deque *d, int valor) {
+    if (d->size == MAX) {
+        printf("Deque lleno.\n");
+        return;
+    }
+    int rear = (d->front + d->size) % MAX;
+    d->datos[rear] = valor;
+    d->size++;
+}
+
+void delete_front(Deque *d) {
+    if (d->size == 0) {
+        printf("Deque vacío.\n");
+        return;
+    }
+    d->front = (d->front + 1) % MAX;
+    d->size--;
+}
+
+void delete_rear(Deque *d) {
+    if (d->size == 0) {
+        printf("Deque vacío.\n");
+        return;
+    }
+    d->size--;
+}
+
+int peek_front(Deque d) {
+    return d.datos[d.front];
+}
+
+int peek_rear(Deque d) {
+    int rear = (d.front + d.size - 1) % MAX;
+    return d.datos[rear];
+}
+
+void printDeque(Deque d) {
+    printf("Deque: ");
+    for (int i = 0; i < d.size; i++) {
+        int idx = (d.front + i) % MAX;
+        printf("%d ", d.datos[idx]);
+    }
+    printf("\nFront: %d | Size: %d\n", d.front, d.size);
+}
+
+int main() {
+    Deque d;
+    initDeque(&d);
+
+    insert_front(&d, 10);
+    insert_rear(&d, 15);
+    insert_rear(&d, 20);
+    insert_front(&d, 30);
+    insert_rear(&d, 40);
+    printDeque(d);
+
+    delete_front(&d);
+    delete_rear(&d);
+    printDeque(d);
+
+    insert_front(&d, 50);
+    insert_rear(&d, 60);
+    printDeque(d);
+
+    return 0;
+}
+
+//1. ¿Qué diferencia tiene el deque frente a la cola circular normal?
+// que en la cola solo puedes insertar al final y eliminar al frente y en la deque puedes hacer ambas opeaciones en ambos extremos
+//2. ¿Qué operaciones permiten simular tanto FIFO como LIFO?
+// FIFO usa insert_rear() y delete_front().
+// LIFO usar insert_front() y delete_front() (las dos siempre y cuando sea desde el mismo lado).
+//3. Investiga que aplicaciones prácticas tiene deque.
+// historial de navegacion o un sistema de gestion de tareas

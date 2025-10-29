@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Nodo {
+    int dato;
+    struct Nodo *siguiente;
+};
+
+void insertarInicio(struct Nodo **cabeza, int valor) {
+    struct Nodo *nuevo = (struct Nodo *)malloc(sizeof(struct Nodo));
+    nuevo->dato = valor;
+    nuevo->siguiente = *cabeza;
+    *cabeza = nuevo;
+}
+
+void recorrer(struct Nodo *cabeza) {
+    struct Nodo *actual = cabeza;
+    while (actual != NULL) {
+        printf("%d -> ", actual->dato);
+        actual = actual->siguiente;
+    }
+    printf("NULL\n");
+}
+
+void eliminar(struct Nodo **cabeza, int valor) {
+    struct Nodo *actual = *cabeza;
+    struct Nodo *anterior = NULL;
+
+    while (actual != NULL && actual->dato != valor) {
+        anterior = actual;
+        actual = actual->siguiente;
+    }
+
+    if (actual == NULL) {
+        printf("Valor no encontrado.\n");
+        return;
+    }
+
+    if (anterior == NULL)  // El valor está en la cabeza
+        *cabeza = actual->siguiente;
+    else
+        anterior->siguiente = actual->siguiente;
+
+    free(actual);
+    printf("Nodo con valor %d eliminado.\n", valor);
+}
+
+void liberar(struct Nodo *cabeza) {
+    struct Nodo *temp;
+    while (cabeza != NULL) {
+        temp = cabeza;
+        cabeza = cabeza->siguiente;
+        free(temp);
+    }
+    printf("Memoria liberada correctamente.\n");
+}
+
+int main() {
+    struct Nodo *cabeza = NULL;
+    int n, valor, eliminarValor;
+
+    printf("¿Cuántos valores deseas insertar? ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Valor %d: ", i + 1);
+        scanf("%d", &valor);
+        insertarInicio(&cabeza, valor);
+        recorrer(cabeza);
+    }
+
+    printf("\nLista actual:\n");
+    recorrer(cabeza);
+
+    printf("\n¿Qué valor deseas eliminar? ");
+    scanf("%d", &eliminarValor);
+    eliminar(&cabeza, eliminarValor);
+
+    printf("\nLista actualizada:\n");
+    recorrer(cabeza);
+
+    liberar(cabeza);
+    return 0;
+}
+
+//1. ¿Por qué las listas enlazadas no requieren tamaño fijo como los arreglos?
+// por que se va creando nodo por nodo con malloc a medida que se ocupe 
+//2. ¿Qué diferencia hay entre mover la cabeza y modificar los punteros internos?
+// mover la cabeza cambia el inicio de la lista borras un elemento y cambia el inico de la lista
+// y los punteros internos cambian el dato anterior o siguiente dentro de la propia lista

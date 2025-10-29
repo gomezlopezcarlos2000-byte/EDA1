@@ -1,0 +1,127 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Nodo {
+    int dato;
+    struct Nodo *siguiente;
+};
+
+// Insertar al inicio (lista circular)
+void insertarCircular(struct Nodo **cabeza, struct Nodo **ultimo, int valor) {
+    struct Nodo *nuevo = (struct Nodo *)malloc(sizeof(struct Nodo));
+    nuevo->dato = valor;
+
+    if (*cabeza == NULL) { // Lista vacía
+        *cabeza = nuevo;
+        *ultimo = nuevo;
+        nuevo->siguiente = nuevo; // Se apunta a sí mismo
+    } else {
+        nuevo->siguiente = *cabeza;
+        (*ultimo)->siguiente = nuevo;
+        *cabeza = nuevo;
+    }
+}
+
+// Recorrer lista circular
+void recorrerCircular(struct Nodo *cabeza) {
+    if (cabeza == NULL) {
+        printf("La lista esta vacia.\n");
+        return;
+    }
+
+    struct Nodo *actual = cabeza;
+    do {
+        printf("%d -> ", actual->dato);
+        actual = actual->siguiente;
+    } while (actual != cabeza);
+    printf("(head)\n");
+}
+
+// Eliminar nodo en lista circular
+void eliminarCircular(struct Nodo **cabeza, int valor) {
+    if (*cabeza == NULL) {
+        printf("La lista está vacía.\n");
+        return;
+    }
+
+    struct Nodo *actual = *cabeza, *anterior = NULL;
+
+    do {
+        if (actual->dato == valor) break;
+        anterior = actual;
+        actual = actual->siguiente;
+    } while (actual != *cabeza);
+
+    if (actual->dato != valor) {
+        printf("Valor no encontrado \n");
+        return;
+    }
+
+    if (actual == *cabeza) {
+        struct Nodo *ultimo = *cabeza;
+        while (ultimo->siguiente != *cabeza)
+            ultimo = ultimo->siguiente;
+
+        if (*cabeza == (*cabeza)->siguiente) // Solo un nodo
+            *cabeza = NULL;
+        else {
+            *cabeza = (*cabeza)->siguiente;
+            ultimo->siguiente = *cabeza;
+        }
+    } else {
+        anterior->siguiente = actual->siguiente;
+    }
+
+    free(actual);
+    printf("Nodo con valor %d eliminado.\n", valor);
+}
+
+// Liberar memoria
+void liberarCircular(struct Nodo *cabeza) {
+    if (cabeza == NULL) return;
+
+    struct Nodo *actual = cabeza->siguiente;
+    while (actual != cabeza) {
+        struct Nodo *temp = actual;
+        actual = actual->siguiente;
+        free(temp);
+    }
+    free(cabeza);
+    printf("Memoria liberada correctamente \n");
+}
+
+int main() {
+    struct Nodo *cabeza = NULL, *ultimo = NULL;
+    int n, valor, eliminarValor;
+
+    printf("¿Cuántos valores deseas insertar? ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("\nValor %d: ", i + 1);
+        scanf("%d", &valor);
+        insertarCircular(&cabeza, &ultimo, valor);
+        recorrerCircular(cabeza);
+    }
+
+    printf("\nLista actual:\n");
+    recorrerCircular(cabeza);
+
+    printf("\n¿Que valor deseas eliminar? ");
+    scanf("%d", &eliminarValor);
+    eliminarCircular(&cabeza, eliminarValor);
+
+    printf("\nLista actualizada:\n");
+    recorrerCircular(cabeza);
+
+    liberarCircular(cabeza);
+    return 0;
+}
+
+//1. ¿Qué ventaja tiene la lista circular frente a la simple?
+//permite recorrer toda la lista sin la necesidad de berificar si llegaste a NULL
+//2. ¿Qué error puede causar un bucle infinito en una lista circular?
+// que se impriman los datos de los nodos sin fin si no se marca la condicion
+//que tail apunte a head
+//3. ¿Qué estructuras o programas del mundo real se basan en listas circulares?
+//juegos que van por turnos, procesos circulares para una maquina 

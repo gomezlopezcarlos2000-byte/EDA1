@@ -1,0 +1,153 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Nodo {
+    int dato;
+    struct Nodo *siguiente;
+    struct Nodo *anterior;
+};
+
+void insertarInicio(struct Nodo **inicio, int valor) {
+    struct Nodo *nuevo = (struct Nodo*)malloc(sizeof(struct Nodo));
+    nuevo->dato = valor;
+    nuevo->siguiente = *inicio;
+    nuevo->anterior = NULL;
+
+    if (*inicio != NULL)
+        (*inicio)->anterior = nuevo;
+
+    *inicio = nuevo;
+}
+
+void insertarFinal(struct Nodo **inicio, int valor) {
+    struct Nodo *nuevo = (struct Nodo*)malloc(sizeof(struct Nodo));
+    nuevo->dato = valor;
+    nuevo->siguiente = NULL;
+    nuevo->anterior = NULL;
+
+    if (*inicio == NULL) {
+        *inicio = nuevo;
+        return;
+    }
+
+    struct Nodo *aux = *inicio;
+    while (aux->siguiente != NULL)
+        aux = aux->siguiente;
+
+    aux->siguiente = nuevo;
+    nuevo->anterior = aux;
+}
+
+void recorrerAdelante(struct Nodo *inicio) {
+    struct Nodo *aux = inicio;
+    printf("Lista adelante: ");
+    while (aux != NULL) {
+        printf("%d ", aux->dato);
+        aux = aux->siguiente;
+    }
+    printf("\n");
+}
+
+
+void recorrerAtras(struct Nodo *inicio) {
+    if (inicio == NULL) {
+        printf("Lista vacia.\n");
+        return;
+    }
+
+    struct Nodo *aux = inicio;
+    while (aux->siguiente != NULL)
+        aux = aux->siguiente;
+
+    printf("Lista atras: ");
+    while (aux != NULL) {
+        printf("%d ", aux->dato);
+        aux = aux->anterior;
+    }
+    printf("\n");
+}
+
+void eliminar(struct Nodo **inicio, int valor) {
+    struct Nodo *aux = *inicio;
+
+    while (aux != NULL && aux->dato != valor)
+        aux = aux->siguiente;
+
+    if (aux == NULL) {
+        printf("Valor no encontrado.\n");
+        return;
+    }
+
+    if (aux == *inicio) {
+        *inicio = aux->siguiente;
+        if (*inicio != NULL)
+            (*inicio)->anterior = NULL;
+    }
+    else if (aux->siguiente == NULL) {
+        aux->anterior->siguiente = NULL;
+    }
+    else {
+        aux->anterior->siguiente = aux->siguiente;
+        aux->siguiente->anterior = aux->anterior;
+    }
+
+    free(aux);
+    printf("Nodo eliminado.\n");
+}
+
+
+void liberar(struct Nodo *inicio) {
+    struct Nodo *aux;
+    while (inicio != NULL) {
+        aux = inicio;
+        inicio = inicio->siguiente;
+        free(aux);
+    }
+    printf("Memoria liberada correctamente.\n");
+}
+
+
+int main() {
+    struct Nodo *inicio = NULL;
+    int n, valor;
+
+    printf("¿Cuantos valores insertar al inicio? ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Valor %d: ", i + 1);
+        scanf("%d", &valor);
+        insertarInicio(&inicio, valor);
+    }
+
+    recorrerAdelante(inicio);
+
+    printf("¿Cuantos valores insertar al final? ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Valor final %d: ", i + 1);
+        scanf("%d", &valor);
+        insertarFinal(&inicio, valor);
+    }
+
+    recorrerAdelante(inicio);
+    recorrerAtras(inicio);
+
+    printf("Valor a eliminar: ");
+    scanf("%d", &valor);
+    eliminar(&inicio, valor);
+
+    recorrerAdelante(inicio);
+
+    liberar(inicio);
+
+    return 0;
+}
+
+//1. ¿Por qué es más fácil eliminar un nodo intermedio en una lista doblemente ligada que en una lista simple?
+//por que tienes acceso al nodo anterior a diferencia de la simple donde hay que recorrer toda la lista 
+//2. ¿Qué sucede si se olvida actualizar alguno de los punteros anterior o siguiente?
+//se pierde la integridad de la lista y por lo tanto se pierden nodos o parte de la lista
+//3. ¿En qué escenarios prácticos se usa una lista doblemente ligada?
+//historial de navegacion, playlist de musica o una serie

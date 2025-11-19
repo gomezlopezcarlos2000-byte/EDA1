@@ -1,0 +1,116 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Nodo {
+    int dato;
+    struct Nodo *siguiente;
+    struct Nodo *anterior;
+};
+
+void insertarCircular(struct Nodo **inicio, int valor) {
+    struct Nodo *nuevo = (struct Nodo*)malloc(sizeof(struct Nodo));
+    nuevo->dato = valor;
+
+    if (*inicio == NULL) {
+        nuevo->siguiente = nuevo;
+        nuevo->anterior = nuevo;
+        *inicio = nuevo;
+        return;
+    }
+
+    struct Nodo *ultimo = (*inicio)->anterior;
+
+    nuevo->siguiente = *inicio;
+    nuevo->anterior = ultimo;
+
+    ultimo->siguiente = nuevo;
+    (*inicio)->anterior = nuevo;
+}
+
+void recorrerCircular(struct Nodo *inicio) {
+    if (inicio == NULL) {
+        printf("Lista vacia.\n");
+        return;
+    }
+
+    struct Nodo *aux = inicio;
+
+    printf("Lista circular: ");
+    do {
+        printf("%d ", aux->dato);
+        aux = aux->siguiente;
+    } while (aux != inicio);
+
+    printf("\n");
+}
+
+void eliminarCircular(struct Nodo **inicio, int valor) {
+    if (*inicio == NULL) {
+        printf("Lista vacia.\n");
+        return;
+    }
+
+    struct Nodo *aux = *inicio;
+
+    do {
+        if (aux->dato == valor)
+            break;
+        aux = aux->siguiente;
+    } while (aux != *inicio);
+
+    if (aux->dato != valor) {
+        printf("Valor no encontrado.\n");
+        return;
+    }
+
+    if (aux->siguiente == aux) {
+        free(aux);
+        *inicio = NULL;
+        printf("Nodo eliminado (era el único).\n");
+        return;
+    }
+
+    struct Nodo *ant = aux->anterior;
+    struct Nodo *sig = aux->siguiente;
+
+    ant->siguiente = sig;
+    sig->anterior = ant;
+
+    if (aux == *inicio)
+        *inicio = sig;
+
+    free(aux);
+    printf("Nodo eliminado.\n");
+}
+
+int main() {
+    struct Nodo *inicio = NULL;
+    int n, valor;
+
+    printf("¿Cuantos valores quieres insertar (circular)? ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Valor %d: ", i + 1);
+        scanf("%d", &valor);
+        insertarCircular(&inicio, valor);
+    }
+
+    recorrerCircular(inicio);
+
+    printf("Valor a eliminar: ");
+    scanf("%d", &valor);
+    eliminarCircular(&inicio, valor);
+
+    recorrerCircular(inicio);
+
+    return 0;
+}
+
+//1. ¿Qué diferencia hay entre una lista doblemente ligada y una circular doblemente ligada?
+// que la circular no tiene un final como tal, en la circular el ultimo nodo apunta al primero mientras
+//que en la normal apunta a NULL
+//2. ¿Qué errores pueden causar ciclos infinitos al recorrer una lista circular?
+// olvidar el condicional para no sobrescribir o imprimir, un mal ajuste al eliminar nodos
+//3. ¿Qué tipo de aplicaciones reales usan este tipo de listas (por ejemplo, reproductores multimedia, navegación en historial, juegos)?
+//al poner el repetir plylist en spotify, o los turnos en mario party

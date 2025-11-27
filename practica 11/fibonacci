@@ -1,0 +1,15 @@
+memoria = {}
+
+def fibonacci(n):
+    if n <= 1:
+        return n
+    if n in memoria:
+        return memoria[n]
+    memoria[n] = fibonacci(n - 1) + fibonacci(n - 2)
+    return memoria[n]
+
+# Posiciones solicitadas
+posiciones = [7, 21, 40, 71, 94]
+
+for p in posiciones:
+    print(f"Fibonacci({p}) =", fibonacci(p))

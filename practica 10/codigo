@@ -1,0 +1,70 @@
+from string import ascii_letters , digits
+from itertools import product
+INT1="Fuerza Bruta"
+print(INT1)
+#Concatentar letras y digitos en una sola cadena
+caracteres = ascii_letters+digits
+
+def buscador(con):
+    
+    if 3<= len(con) <=4:
+        for i  in range(3,5):
+            for comb in product(caracteres, repeat = i):
+                
+                prueba = "".join(comb)
+                
+                if prueba == con:
+                    print ('tu contraseña es {}'.format(prueba))
+                    break
+    else:
+        print("ingresa una contraseña que contenga de 3 a 4 caracteres")
+
+from time import time 
+t0 = time()
+con = 'H014'
+buscador(con)
+print("Tiempos de ejecusion  {}".format(round(time()-t0, 6)))
+
+INT2="Algoritmos ávidos"
+print(INT2)
+def cambio(cantidad, denominaciones):
+    resultado= []
+    while(cantidad > 0):
+        if(cantidad >= denominaciones[0]):
+            
+            num = cantidad // denominaciones[0]
+            cantidad = cantidad - (num * denominaciones[0])
+            resultado.append([denominaciones[0], num])
+            denominaciones = denominaciones[1:]
+    return resultado
+
+print (cambio(1000, [500, 200, 100, 50, 20, 5, 1]))
+
+print (cambio(500,[500,200,100,50,20,5,1]))
+
+print (cambio(300,[50,20,5,1]))
+
+print (cambio(200,[5]))
+
+print (cambio(98,[50,20,5,1]))
+
+INT3="Incremental"
+print(INT3)
+
+def insertionSort(n_lista):
+    for index in range (1,len(n_lista)):
+        actual=n_lista[index]
+        posicion=index
+        print("valor a ordenar = {}".format(actual))
+        while posicion>0 and n_lista[posicion-1]>actual:
+            n_lista[posicion]=n_lista[posicion-1]
+            posicion=posicion-1
+        n_lista[posicion]=actual
+        print(n_lista)
+        print()
+    return n_lista
+    
+lista = [21,10,0,11,9,24,14,1]
+print("lista desordenada {}".format(lista))
+insertionSort(lista)
+print("lista ordenada {}".format(lista))

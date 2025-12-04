@@ -1,0 +1,214 @@
+INT1="Bottom-up"
+print(INT1)
+print()
+
+def fibonacci_iterativo_v1(numero):
+    f1 = 0
+    f2 = 1
+    tmp = 0
+    for i in range(1, numero-1):
+        tmp = f1 + f2
+        f1 = f2
+        f2 = tmp
+    return f2
+fibonacci_iterativo_v1(6)
+
+def fibonacci_iterativo_v2(numero):
+    f1 = 0
+    f2 = 1
+    for i in range(1, numero-1):
+        f1, f2 = f2, f1 + f2   # asignación paralela
+    return f2
+    
+def fibonacci_bottom_up(numero):
+    f_parciales = [0, 1, 1]   # Esta es la lista que mantiene las soluciones previamente calculadas
+    while len(f_parciales) < numero:
+        f_parciales.append(f_parciales[-1] + f_parciales[-2])
+        print(f_parciales)
+    return f_parciales[numero-1]
+
+fibonacci_bottom_up(5)
+
+INT2="Top-down"
+print(INT2)
+print()
+memoria = {1:0, 2:1, 3:1}
+
+def fibonacci_iterativo_v2(numero):
+    f1 = 0
+    f2 = 1
+    for i in range(1, numero-1):
+        f1, f2 = f2, f1 + f2
+    return f2
+
+def fibonacci_top_down(numero):
+    if numero in memoria:
+        return memoria[numero]
+    f = fibonacci_iterativo_v2(numero-1) + fibonacci_iterativo_v2(numero-2)
+    memoria[numero] = f
+    return memoria[numero]
+    
+fibonacci_top_down(12)
+print(memoria)
+
+fibonacci_top_down(8)
+print(memoria)
+
+import pickle
+
+archivo = open('memoria.p','wb')
+pickle.dump(memoria,archivo)
+archivo.close()
+
+archivo = open('memoria.p','rb')
+memoria_de_archivo = pickle.load(archivo)
+archivo.close()
+
+print(memoria)
+print(memoria_de_archivo)
+
+def quicksort(lista):
+    quicksort_auxiliar(lista, 0, len(lista) - 1)
+
+def quicksort_auxiliar(lista, inicio, fin):
+    if inicio < fin:
+        pivote = particion(lista, inicio, fin)
+        quicksort_auxiliar(lista, inicio, pivote - 1)
+        quicksort_auxiliar(lista, pivote + 1, fin)
+
+def particion(lista, inicio, fin):
+    # Se asigna como pivote el número de la primera localidad
+    pivote = lista[inicio]
+    print("Valor del pivote {}".format(pivote))
+    # Se crean dos marcadores
+    izquierda = inicio + 1
+    derecha = fin
+    print("Indice izquierdo {}".format(izquierda))
+    print("Indice derecho {}".format(derecha))
+
+    bandera = False
+    while not bandera:
+        while izquierda <= derecha and lista[izquierda] <= pivote:
+            izquierda = izquierda + 1
+        while lista[derecha] >= pivote and derecha >= izquierda:
+            derecha = derecha - 1
+        if derecha < izquierda:
+            bandera = True
+        else:
+            temp = lista[izquierda]
+            lista[izquierda] = lista[derecha]
+            lista[derecha] = temp
+
+    print(lista)
+
+    temp_lista = lista[inicio]
+    lista[inicio] = lista[derecha]
+    lista[derecha] = temp_lista
+    return derecha
+
+lista = [21, 10, 8, 11, 5, 24, 20, 14, 1]
+print("Lista desordenada {}".format(lista))
+quicksort(lista)
+print("Lista ordenada {}".format(lista))
+
+INT3="Medicion y graficas de los tiempos de ejecusion"
+print(INT3)
+print()
+
+
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+#Cargando módulos
+import random
+from time import time
+
+#Cargando las funciones guardadas en el archivo
+from insertionSort import insertionSort_time
+#Sólo se necesita llamar a la función principal
+from quicksort import quicksort_time
+
+#Tamaños de la lista de números aleatorios a generar
+datos = [ii*100 for ii in range(1,21)]
+
+tiempo_is = [] #Lista para guardar el tiempo de ejecución de insert sort
+tiempo_qs = [] #Lista para guardar el tiempo de ejecución de quick sort
+
+for ii in datos:
+    lista_is = random.sample(range(0, 1000000), ii)
+    #Se hace una copia de la lista para que se ejecute el algoritmo con el mismo número
+    lista_qs = lista_is.copy()
+
+    t0 = time() #Se guarda el tiempo inicial
+    insertionSort_time(lista_is)
+    tiempo_is.append(round(time()-t0, 6)) #Se le resta al tiempo actual, el tiempo inicial
+
+    t0 = time()
+    quicksort_time(lista_qs)
+    tiempo_qs.append(round(time()-t0, 6))
+    
+    #Imprimiendo tiempos parciales de ejecución
+print("Tiempos parciales de ejecución en INSERT SORT {}\n".format(tiempo_is))
+print("Tiempos parciales de ejecución en QUICK SORT {} [s]\n".format(tiempo_qs))
+
+#Imprimiendo tiempos totales de ejecución
+#Para calcular el tiempo total se aplica la función sum() a las listas de tiempo
+print("Tiempo total de ejecución en insert sort {} [s]".format(sum(tiempo_is)))
+print("Tiempo total de ejecución en quick sort {} [s]".format(sum(tiempo_qs)))
+
+#Generando la gráfica
+fig, ax = subplots()
+ax.plot(datos, tiempo_is, label='insert sort', marker="*", color="r")
+ax.plot(datos, tiempo_qs, label='quick sort', marker="o", color="b")
+ax.set_xlabel('Datos')
+ax.set_ylabel('Tiempo')
+ax.grid(True)
+ax.legend(loc=2)
+
+plt.title('Tiempo de ejecución [s] (insert vs. quick)')
+plt.show()
+
+INT4="Modelo RAM"
+print(INT4)
+print()
+
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import random # Se añade import random que es necesario para random.sample()
+
+times = 0
+
+def insertionSort_graph(n_lista):
+    global times
+    for index in range(1,len(n_lista)):
+        times += 1
+        actual = n_lista[index]
+        posicion = index
+        while posicion>0 and n_lista[posicion-1]>actual:
+            times += 1
+            n_lista[posicion]=n_lista[posicion-1]
+            posicion = posicion-1
+        n_lista[posicion]=actual
+    return n_lista
+
+TAM = 101
+eje_x = list(range(1,TAM,1))
+eje_y = []
+lista_variable = []
+
+for num in eje_x:
+    lista_variable = random.sample(range(0, 1000), num)
+    times = 0
+    lista_variable = insertionSort_graph(lista_variable)
+    eje_y.append(times)
+    
+fig, ax = plt.subplots(facecolor='w', edgecolor='k')
+ax.plot(eje_x, eje_y, marker="o",color="b", linestyle='None')
+
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.grid(True)
+ax.legend(["Insertion sort"])
+
+plt.title('Insertion sort')
+plt.show()
